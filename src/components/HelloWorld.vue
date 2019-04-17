@@ -16,7 +16,7 @@
             </div>
           </div>
           <div class="bottom">
-            <img v-for="(item,index) in arrBottom"  @dragstart="dragfunc" :key="index" @click="clickSele(item,index)" @mouseup="upfunc(index)" @mousedown="downfunc(index)" :class="item.isSelect == 1? tops :''"  :src="item.path" alt="">
+            <img v-for="(item,index) in arrBottom"  @dragstart="dragfunc" :key="index" @mousemove="movefunc(index)" @click="clickSele(item,index)" @mouseup="upfunc(index)" @mousedown="downfunc(index)" :class="item.isSelect == 1? tops :''"  :src="item.path" alt="">
           </div>
           <div class="center">
               <button v-if="goTime==1" @click="goTimes()" class="goTime">开始</button>
@@ -45,6 +45,9 @@ export default {
       return {
         djsClass:0,//显示倒计时
         djsNum:30,//倒计时数字
+        timer:'',
+        signIndex:'',
+        up:0,//判断鼠标有没有摁下
         goTime:1,
         center:0,
         tops:'tops',
@@ -216,12 +219,25 @@ export default {
   },
   // 鼠标摁下 抬起事件
   downfunc (index){
-     this.arrBottom[index].isSelect = this.arrBottom[index].isSelect == 1 ? 0 : 1
-       return false
+     this.up = 1
   },
   upfunc (index) {
-    this.arrBottom[index].isSelect = this.arrBottom[index].isSelect == 1 ? 0 : 1
-       return false
+    this.up = 0
+  },
+  movefunc (index){
+    let that = this
+    if(this.up == 1){
+      if(index != this.signIndex){
+         that.arrBottom[index].isSelect = that.arrBottom[index].isSelect == 1 ? 0 : 1
+      }else{
+        if (this.timer) {clearTimeout(this.timer)}
+          this.timer = setTimeout(function(){
+            console.log(1)
+            that.arrBottom[index].isSelect = that.arrBottom[index].isSelect == 1 ? 0 : 1
+          },300)
+        }
+    }
+    this.signIndex = index
   },
   dragfunc (e){
     console.log(121231)
