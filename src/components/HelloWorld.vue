@@ -16,7 +16,7 @@
             </div>
           </div>
           <div class="bottom">
-            <img v-for="(item,index) in arrBottom" :key="index" :class="item.isSelect == 1? b : s"  :src="item.path" alt="">
+            <img v-for="(item,index) in arrBottom"  @dragstart="dragfunc" :key="index" @click="clickSele(item,index)" @mouseup="upfunc(index)" @mousedown="downfunc(index)" :class="item.isSelect == 1? tops :''"  :src="item.path" alt="">
           </div>
           <div class="center">
               <button v-if="goTime==1" @click="goTimes()" class="goTime">开始</button>
@@ -47,6 +47,7 @@ export default {
         djsNum:30,//倒计时数字
         goTime:1,
         center:0,
+        tops:'tops',
         go:1,
         arrMax:[],//总牌数
         arrLeft:[],
@@ -210,8 +211,22 @@ export default {
      },1000)
    },
   //  点击单张扑克
-  clickSele () {
-
+  clickSele (item,index) {
+    this.arrBottom[index].isSelect = this.arrBottom[index].isSelect == 1 ? 0 : 1
+  },
+  // 鼠标摁下 抬起事件
+  downfunc (index){
+     this.arrBottom[index].isSelect = this.arrBottom[index].isSelect == 1 ? 0 : 1
+       return false
+  },
+  upfunc (index) {
+    this.arrBottom[index].isSelect = this.arrBottom[index].isSelect == 1 ? 0 : 1
+       return false
+  },
+  dragfunc (e){
+    console.log(121231)
+     e.preventDefault()
+    return false
   }
   },
   mounted(){
@@ -279,7 +294,8 @@ export default {
   width: 60px;
   height: 110px;
   margin-left: -35px;
-  margin-top: 20px;
+  margin-top: 35px;
+  position: relative;
 }
 .left{
   height: 80%;
@@ -380,6 +396,9 @@ export default {
   top:50%;
   right: 2%;
   transform: translate(-50%,-50%); 
+}
+.tops{
+  top:-15px;
 }
 
 </style>
